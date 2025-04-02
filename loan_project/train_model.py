@@ -1,37 +1,31 @@
-import pandas as pd
-from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.preprocessing import StandardScaler, OrdinalEncoder, OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
-from sklearn.metrics import accuracy_score, f1_score, roc_auc_score
+from sklearn.metrics import accuracy_score, f1_score
+from imblearn.over_sampling import SMOTENC
 import joblib
+import pandas as pd
 
-# Load the prepared dataset
 df = pd.read_csv("prepared_loan_data.csv")
 
-# Drop irrelevant columns (e.g., Loan_ID)
-df.drop("Loan_ID", axis=1, inplace=True)
+# Drop Loan_ID if exists
+if "Loan_ID" in df.columns:
+    df.drop("Loan_ID", axis=1, inplace=True)
 
-# Split data into features (X) and target (y)
+# Features & target
 X = df.drop("Loan_Status", axis=1)
 y = df["Loan_Status"]
 
-# Split data into training and testing sets
+# Train-test split BEFORE balancing to prevent data leakage
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# Define preprocessing steps for numerical and categorical features
-numeric_features = [
-    "ApplicantIncome",
-    "CoapplicantIncome",
-    "LoanAmount",
-    "Loan_Amount_Term",
-    "Credit_History",
-]
+# Identify categorical columns for SMOTE-NC and encoding
 categorical_features = [
     "Gender",
     "Married",
@@ -40,7 +34,30 @@ categorical_features = [
     "Property_Area",
     "Dependents",
 ]
+numeric_features = [
+    "ApplicantIncome",
+    "CoapplicantIncome",
+    "LoanAmount",
+    "Loan_Amount_Term",
+    "Credit_History",
+]
 
+# Encode categorical features as integers for SMOTE-NC compatibility
+encoder = OrdinalEncoder()
+X_train[categorical_features] = encoder.fit_transform(X_train[categorical_features])
+X_test[categorical_features] = encoder.transform(X_test[categorical_features])
+
+# Save the encoder for use during prediction
+joblib.dump(encoder, "ml_model/ordinal_encoder.pkl")
+
+# Get indices of categorical columns in the DataFrame for SMOTE-NC
+categorical_indices = [X_train.columns.get_loc(col) for col in categorical_features]
+
+# Apply SMOTE-NC to balance the training dataset
+smote_nc = SMOTENC(categorical_features=categorical_indices, random_state=42)
+X_train_balanced, y_train_balanced = smote_nc.fit_resample(X_train, y_train)
+
+# Preprocessing pipeline: scale numeric features and encode categorical features
 preprocessor = ColumnTransformer(
     transformers=[
         ("num", StandardScaler(), numeric_features),
@@ -48,41 +65,38 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-# Define models to evaluate
+# Define models with hyperparameters
 models = {
-    "Random Forest": RandomForestClassifier(random_state=42),
+    "Random Forest": RandomForestClassifier(
+        n_estimators=200, max_depth=10, min_samples_split=5, random_state=42
+    ),
     "Logistic Regression": LogisticRegression(random_state=42, max_iter=1000),
-    "Support Vector Machine": SVC(probability=True, random_state=42),
+    "Support Vector Machine": SVC(
+        probability=True, kernel="rbf", C=5, gamma="scale", random_state=42
+    ),
 }
 
-# Evaluate each model using cross-validation and test set performance
+# Evaluate models and store results
 results = {}
 for model_name, model in models.items():
     pipeline = Pipeline([("preprocessor", preprocessor), ("classifier", model)])
-
-    # Train the pipeline on training data
-    pipeline.fit(X_train, y_train)
-
-    # Predict on test data
+    pipeline.fit(X_train_balanced, y_train_balanced)
     y_pred = pipeline.predict(X_test)
-
-    # Calculate metrics
     accuracy = accuracy_score(y_test, y_pred)
     f1 = f1_score(y_test, y_pred, average="weighted")
-
     results[model_name] = {"Accuracy": accuracy, "F1 Score": f1}
 
-# Output model comparison results
-print("Model Comparison Results:")
+# Print results for comparison
+print("\nModel Comparison Results:")
 for model_name, metrics in results.items():
     print(f"{model_name}: {metrics}")
 
-# Choose the best model based on F1 Score or Accuracy and save it using joblib
+# Select the best model based on F1 Score and save it for deployment
 best_model_name = max(results, key=lambda x: results[x]["F1 Score"])
 best_model_pipeline = Pipeline(
     [("preprocessor", preprocessor), ("classifier", models[best_model_name])]
 )
-best_model_pipeline.fit(X_train, y_train)
+best_model_pipeline.fit(X_train_balanced, y_train_balanced)
 
-print(f"Best Model: {best_model_name}")
+print(f"\n✅ Best Model: {best_model_name} saved successfully.")
 joblib.dump(best_model_pipeline, "ml_model/best_model.pkl")

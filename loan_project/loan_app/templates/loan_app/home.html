@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loan Eligibility Form</title>
+   {% load static %}
+  <link rel="stylesheet" href="{% static 'loan_app/styles.css' %}">
+</head>
+<body>
+  <div class="container">
+      <h1>Loan Eligibility Form</h1>
+      <form method="post" action="{% url 'predict' %}">
+          {% csrf_token %}
+          <div class="grid-container">
+              {{ form.as_p }}
+          </div>
+          <button type="submit" class="btn">Submit</button>
+      </form>
+  </div>
+</body>
+</html>

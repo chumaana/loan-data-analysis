@@ -2,7 +2,7 @@ import pandas as pd
 
 df = pd.read_csv("loan_data.csv")
 
-# Fill missing values using the most common (mode) or median values for each column
+# Fill missing values
 fill_values = {
     "Gender": df["Gender"].mode()[0],
     "Married": df["Married"].mode()[0],
@@ -12,10 +12,11 @@ fill_values = {
     "Loan_Amount_Term": df["Loan_Amount_Term"].mode()[0],
     "Credit_History": df["Credit_History"].mode()[0],
 }
-df.fillna(fill_values, inplace=True)  # Apply the fill values
+df.fillna(fill_values, inplace=True)
 
-# Convert `Loan_Status` column from categorical ('Y'/'N') to numerical (1/0)
 df["Loan_Status"] = df["Loan_Status"].map({"Y": 1, "N": 0})
+df["Loan_Amount_Term"] = df["Loan_Amount_Term"].clip(lower=12, upper=360)
+df["LoanAmount"] = df["LoanAmount"].clip(upper=1000)
 
 df.to_csv("prepared_loan_data.csv", index=False)
 print("✅ Data successfully prepared.")

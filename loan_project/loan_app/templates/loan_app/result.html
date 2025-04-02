@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Loan Prediction Result</title>
+   {% load static %}
+  <link rel="stylesheet" href="{% static 'loan_app/styles.css' %}">
+</head>
+<body>
+  <div class="container">
+      <h1>Loan Prediction Result</h1>
+
+      <!-- Display Prediction Result -->
+      <div class="result-message">
+          <p><strong>Prediction:</strong> {{ result_message }}</p>
+      </div>
+
+      <!-- Display Submitted Information -->
+      <h2>Submitted Information:</h2>
+      <table class="summary-table">
+          {% for key, value in input_data.items %}
+          <tr>
+              <td><strong>{{ key|capfirst }}:</strong></td>
+              <td>{{ value }}</td>
+          </tr>
+          {% endfor %}
+      </table>
+
+      <!-- Back Button -->
+      <a href="{% url 'home' %}" class="btn">Try Again</a>
+  </div>
+</body>
+</html>
