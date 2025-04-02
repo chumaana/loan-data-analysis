@@ -17,6 +17,8 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from .views import predict_loan
 
-
-urlpatterns = []
+urlpatterns = [
+    path("predict/", predict_loan, name="predict_loan"),
+]

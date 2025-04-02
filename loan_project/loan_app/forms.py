@@ -1,19 +1,23 @@
 from django import forms
 
 
-class LoanForm(forms.form):
-    Gender = forms.ChoiceField(choices=[("Male", "Male"), ("Female", "Female")])
-    Married = forms.ChoiceField(choices=[("Yes", "Yes"), ("No", "No")])
-    Dependents = forms.IntegerField()
-    Education = forms.ChoiceField(
+class LoanForm(forms.Form):
+    gender = forms.ChoiceField(choices=[("Male", "Male"), ("Female", "Female")])
+    married = forms.ChoiceField(choices=[("Yes", "Yes"), ("No", "No")])
+    dependents = forms.ChoiceField(
+        choices=[("0", "0"), ("1", "1"), ("2", "2"), ("3+", "3+")]
+    )
+    education = forms.ChoiceField(
         choices=[("Graduate", "Graduate"), ("Not Graduate", "Not Graduate")]
     )
-    Self_Employed = forms.ChoiceField(choices=[("Yes", "Yes"), ("No", "No")])
-    ApplicantIncome = forms.FloatField()
-    CoapplicantIncome = forms.FloatField()
-    LoanAmount = forms.FloatField()
-    Loan_Amount_Term = forms.FloatField()
-    Credit_History = forms.ChoiceField(choices=[(1, "Yes"), (0, "No")])
-    Property_Area = forms.ChoiceField(
+    self_employed = forms.ChoiceField(choices=[("Yes", "Yes"), ("No", "No")])
+
+    applicant_income = forms.FloatField()
+    coapplicant_income = forms.FloatField()
+    loan_amount = forms.FloatField()
+    loan_amount_term = forms.FloatField()
+
+    credit_history = forms.ChoiceField(choices=[("1", "Yes"), ("0", "No")])
+    property_area = forms.ChoiceField(
         choices=[("Urban", "Urban"), ("Semiurban", "Semiurban"), ("Rural", "Rural")]
     )
