@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Graphs - Loan Prediction{% endblock %}
+
+{% block content %}
+    <h2>Loan Data Visualizations</h2>
+    
+ <h3>Applicant Income Distribution</h3>
+    <img src="{% static 'loan_app/applicant_income_distribution.png' %}" alt="Applicant Income Distribution">
+
+    <h3>Feature Correlation Matrix</h3>
+    <img src="{% static 'loan_app/correlation_matrix_prepared.png' %}" alt="Feature Correlation Matrix">
+
+    <h3>Dependents Distribution</h3>
+    <img src="{% static 'loan_app/Dependents_distribution.png' %}" alt="Dependents Distribution">
+
+    <h3>Education Level Distribution</h3>
+    <img src="{% static 'loan_app/Education_distribution.png' %}" alt="Education Level Distribution">
+
+    <h3>Loan Amount by Status</h3>
+    <img src="{% static 'loan_app/loan_amount_by_status.png' %}" alt="Loan Amount by Status">
+
+    <h3>Loan Status Distribution</h3>
+    <img src="{% static 'loan_app/loan_status_distribution_prepared.png' %}" alt="Loan Status Distribution">
+
+    <h3>Married Applicants Distribution</h3>
+    <img src="{% static 'loan_app/Married_distribution.png' %}" alt="Married Applicants Distribution">
+
+    <h3>Property Area Distribution</h3>
+    <img src="{% static 'loan_app/Property_Area_distribution.png' %}" alt="Property Area Distribution">
+
+    <h3>Self-Employed Applicants Distribution</h3>
+    <img src="{% static 'loan_app/Self_Employed_distribution.png' %}" alt="Self-Employed Applicants Distribution">{% endblock %}

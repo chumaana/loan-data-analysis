@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block title %}Predict Loan{% endblock %}
+
+{% block content %}
+
+
+<form method="post"><h2>Loan Prediction Form</h2>
+    {% csrf_token %}
+    
+    <div class="form-group">
+        <label for="{{ form.gender.id_for_label }}">Gender</label>
+        {{ form.gender }}
+        <span class="error-message">{{ form.gender.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.married.id_for_label }}">Married</label>
+        {{ form.married }}
+        <span class="error-message">{{ form.married.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.dependents.id_for_label }}">Dependents</label>
+        {{ form.dependents }}
+        <span class="error-message">{{ form.dependents.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.education.id_for_label }}">Education</label>
+        {{ form.education }}
+        <span class="error-message">{{ form.education.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.self_employed.id_for_label }}">Self Employed</label>
+        {{ form.self_employed }}
+        <span class="error-message">{{ form.self_employed.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.applicant_income.id_for_label }}">Applicant Income</label>
+        {{ form.applicant_income }}
+        <span class="error-message">{{ form.applicant_income.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.coapplicant_income.id_for_label }}">Coapplicant Income</label>
+        {{ form.coapplicant_income }}
+        <span class="error-message">{{ form.coapplicant_income.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.loan_amount.id_for_label }}">Loan Amount</label>
+        {{ form.loan_amount }}
+        <span class="error-message">{{ form.loan_amount.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.loan_amount_term.id_for_label }}">Loan Term</label>
+        {{ form.loan_amount_term }}
+        <span class="error-message">{{ form.loan_amount_term.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.credit_history.id_for_label }}">Credit History</label>
+        {{ form.credit_history }}
+        <span class="error-message">{{ form.credit_history.errors.as_text }}</span>
+    </div>
+
+    <div class="form-group">
+        <label for="{{ form.property_area.id_for_label }}">Property Area</label>
+        {{ form.property_area }}
+        <span class="error-message">{{ form.property_area.errors.as_text }}</span>
+    </div>
+
+    <button type="submit">Predict</button>
+</form>
+
+<!-- Display Prediction Results -->
+{% if prediction %}
+<div class="result-box">
+    <h3>Prediction Result:</h3>
+    <p><strong>{{ prediction }}</strong></p>
+
+  
+</div>
+{% endif %}
+{% endblock %}

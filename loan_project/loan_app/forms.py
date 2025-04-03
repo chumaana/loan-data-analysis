@@ -12,12 +12,15 @@ class LoanForm(forms.Form):
         label="Marital Status",
         widget=forms.Select(attrs={"class": "form-control"}),
     )
-    dependents = forms.IntegerField(
+    dependents = forms.ChoiceField(
         label="Number of Dependents",
-        min_value=0,
-        widget=forms.NumberInput(
-            attrs={"class": "form-control", "placeholder": "Enter number of dependents"}
-        ),
+        choices=[
+            ("0", "0"),
+            ("1", "1"),
+            ("2", "2"),
+            ("3+", "3+"),
+        ],
+        widget=forms.Select(attrs={"class": "form-control"}),
     )
     education = forms.ChoiceField(
         choices=[("Graduate", "Graduate"), ("Not Graduate", "Not Graduate")],

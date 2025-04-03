@@ -1,22 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Loan Eligibility Form</title>
-   {% load static %}
-  <link rel="stylesheet" href="{% static 'loan_app/styles.css' %}">
-</head>
-<body>
-  <div class="container">
-      <h1>Loan Eligibility Form</h1>
-      <form method="post" action="{% url 'predict' %}">
-          {% csrf_token %}
-          <div class="grid-container">
-              {{ form.as_p }}
-          </div>
-          <button type="submit" class="btn">Submit</button>
-      </form>
-  </div>
-</body>
-</html>
+{% block title %}Home - Loan Prediction{% endblock %}
+
+{% block content %}
+<div class="home-info"> 
+<div class="title-block">
+    <h1 class="title-desc">Welcome to the <span class="title">Loan Prediction System</span> </h1>
+    <p>Use this tool to check whether your loan application is likely to be approved.
+    Select an option from the menu to get started or press the button below</p>
+    <button><a  href="{% url 'predict_loan' %}">Try it</a></button>
+    </div>
+    <div class="graph-block">
+    <img src="{% static 'loan_app/applicant_income_distribution.png' %}" alt="Applicant Income Distribution">
+    </div>
+    </div>
+{% endblock %}

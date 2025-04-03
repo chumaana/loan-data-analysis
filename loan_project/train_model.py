@@ -1,15 +1,15 @@
-from sklearn.model_selection import train_test_split
+# Import necessary libraries
+import pandas as pd
+import joblib
+from sklearn.model_selection import train_test_split, GridSearchCV
 from sklearn.pipeline import Pipeline
 from sklearn.compose import ColumnTransformer
 from sklearn.preprocessing import StandardScaler, OrdinalEncoder, OneHotEncoder
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.svm import SVC
 from sklearn.metrics import accuracy_score, f1_score
 from imblearn.over_sampling import SMOTENC
-import joblib
-import pandas as pd
 
+# Load dataset
 df = pd.read_csv("prepared_loan_data.csv")
 
 # Drop Loan_ID if exists
@@ -25,7 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
 
-# Identify categorical columns for SMOTE-NC and encoding
+# Identify categorical and numerical features
 categorical_features = [
     "Gender",
     "Married",
@@ -65,38 +65,42 @@ preprocessor = ColumnTransformer(
     ]
 )
 
-# Define models with hyperparameters
-models = {
-    "Random Forest": RandomForestClassifier(
-        n_estimators=200, max_depth=10, min_samples_split=5, random_state=42
-    ),
-    "Logistic Regression": LogisticRegression(random_state=42, max_iter=1000),
-    "Support Vector Machine": SVC(
-        probability=True, kernel="rbf", C=5, gamma="scale", random_state=42
-    ),
+# Define the pipeline with preprocessing and RandomForestClassifier
+pipeline = Pipeline(
+    [
+        ("preprocessor", preprocessor),
+        ("classifier", RandomForestClassifier(random_state=42)),
+    ]
+)
+
+# Define hyperparameters for GridSearchCV
+param_grid = {
+    "classifier__n_estimators": [100, 200, 300],
+    "classifier__max_depth": [10, 20, None],
+    "classifier__min_samples_split": [2, 5, 10],
 }
 
-# Evaluate models and store results
-results = {}
-for model_name, model in models.items():
-    pipeline = Pipeline([("preprocessor", preprocessor), ("classifier", model)])
-    pipeline.fit(X_train_balanced, y_train_balanced)
-    y_pred = pipeline.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    f1 = f1_score(y_test, y_pred, average="weighted")
-    results[model_name] = {"Accuracy": accuracy, "F1 Score": f1}
-
-# Print results for comparison
-print("\nModel Comparison Results:")
-for model_name, metrics in results.items():
-    print(f"{model_name}: {metrics}")
-
-# Select the best model based on F1 Score and save it for deployment
-best_model_name = max(results, key=lambda x: results[x]["F1 Score"])
-best_model_pipeline = Pipeline(
-    [("preprocessor", preprocessor), ("classifier", models[best_model_name])]
+# Perform GridSearchCV to find the best parameters
+grid_search = GridSearchCV(
+    estimator=pipeline, param_grid=param_grid, cv=5, scoring="f1_weighted"
 )
-best_model_pipeline.fit(X_train_balanced, y_train_balanced)
 
-print(f"\n✅ Best Model: {best_model_name} saved successfully.")
-joblib.dump(best_model_pipeline, "ml_model/best_model.pkl")
+# Train the model using balanced data (SMOTE-NC)
+grid_search.fit(X_train_balanced, y_train_balanced)
+
+# Save the best model to a file for deployment
+joblib.dump(grid_search.best_estimator_, "ml_model/best_model.pkl")
+print("✅ Best model saved successfully.")
+
+# Print best parameters from GridSearchCV
+print("Best Parameters:", grid_search.best_params_)
+
+# Evaluate the model on the test set
+best_model = grid_search.best_estimator_
+y_pred = best_model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred, average="weighted")
+
+print("\nModel Evaluation on Test Set:")
+print(f"Accuracy: {accuracy:.2f}")
+print(f"F1 Score: {f1:.2f}")

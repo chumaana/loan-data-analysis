@@ -2,7 +2,7 @@ from django.shortcuts import render
 import joblib
 import pandas as pd
 from .forms import LoanForm
-from .validators import validate_input  # Import the validation function
+from .validators import validate_input
 
 
 def home(request):
@@ -11,12 +11,13 @@ def home(request):
     return render(request, "loan_app/home.html", {"form": form})
 
 
-from django.shortcuts import render
-import joblib
-import pandas as pd
-
-
 def predict_loan(request):
+    """Handle loan prediction form and display results."""
+    form = LoanForm()
+    prediction = None
+    probability = None
+    input_data = None
+
     if request.method == "POST":
         form = LoanForm(request.POST)
         if form.is_valid():
@@ -43,54 +44,54 @@ def predict_loan(request):
                 # Validate input values
                 errors = validate_input(input_data)
                 if errors:
-                    return render(request, "loan_app/error.html", {"error": errors})
+                    # Assign errors to specific form fields
+                    for field, error_msg in errors.items():
+                        print("Validation Errors:", field)
 
-                # Convert input data to DataFrame
-                X_pred = pd.DataFrame([input_data])
-
-                # Encode categorical features
-                categorical_features = [
-                    "Gender",
-                    "Married",
-                    "Education",
-                    "Self_Employed",
-                    "Property_Area",
-                    "Dependents",
-                ]
-                X_pred[categorical_features] = encoder.transform(
-                    X_pred[categorical_features]
-                )
-
-                # Predict using the model pipeline
-                probabilities = model.predict_proba(X_pred)[0]
-                approval_probability = probabilities[1] * 100
-
-                # Adjust classification threshold
-                threshold = 70.0
-                if approval_probability >= threshold:
-                    result_message = (
-                        f"Approved with a {approval_probability:.2f}% probability."
-                    )
+                        form.add_error(field, error_msg)  # Attach errors to fields
                 else:
-                    result_message = f"Rejected with a {100 - approval_probability:.2f}% probability."
+                    # Convert input to DataFrame and encode categorical features
+                    X_pred = pd.DataFrame([input_data])
+                    categorical_features = [
+                        "Gender",
+                        "Married",
+                        "Education",
+                        "Self_Employed",
+                        "Property_Area",
+                        "Dependents",
+                    ]
+                    X_pred[categorical_features] = encoder.transform(
+                        X_pred[categorical_features]
+                    )
 
-                return render(
-                    request,
-                    "loan_app/result.html",
-                    {
-                        "result_message": result_message,
-                        "input_data": input_data,
-                    },
-                )
+                    # Predict loan approval probability
+                    probabilities = model.predict_proba(X_pred)[0]
+                    probability = probabilities[1] * 100  # Approval probability
+
+                    # Adjust classification threshold (e.g., 70%)
+                    threshold = 70.0
+                    if probability >= threshold:
+                        prediction = f"Approved with a {probability:.2f}% probability."
+                    else:
+                        prediction = (
+                            f"Rejected with a {100 - probability:.2f}% probability."
+                        )
 
             except Exception as e:
-                return render(
-                    request,
-                    "loan_app/error.html",
-                    {"error": f"Prediction error: {str(e)}"},
-                )
+                form.add_error(None, f"Prediction error: {str(e)}")  # Non-field error
 
-    else:
-        form = LoanForm()
+    return render(
+        request,
+        "loan_app/loan_prediction.html",
+        {
+            "form": form,
+            "prediction": prediction,
+            "probability": probability,
+            "input_data": input_data,
+        },
+    )
 
-    return render(request, "loan_app/home.html", {"form": form})
+
+def graphs(request):
+    """Render the page displaying generated graphs."""
+    return render(request, "loan_app/visualization.html")

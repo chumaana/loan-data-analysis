@@ -1,0 +1,140 @@
+@import url('https://fonts.cdnfonts.com/css/satoshi');
+
+* {
+  font-family: 'Satoshi', sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  padding: 2rem 5rem 20.875rem 5rem;
+  flex-direction: column;
+
+  background: radial-gradient(50% 50% at 50% 50%, #fffbfa 0%, #fbebeb 100%);
+}
+
+a {
+  text-decoration: none;
+}
+button {
+  cursor: pointer;
+}
+button > a {
+  color: unset;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+.logo {
+  color: #920f0f;
+  font-size: 24px;
+  font-weight: bold;
+}
+.nav-items {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+}
+
+.navbar a {
+  color: #920f0f;
+  font-weight: 400;
+  line-height: 150%;
+  text-decoration: none;
+}
+
+.navbar a:hover {
+  text-decoration: underline;
+}
+
+.title-desc {
+  color: #1d1d1d;
+  font-size: 2.5rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%; /* 3.25rem */
+}
+
+.title {
+  color: #920f0f;
+  font-size: 2.5rem;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 130%;
+}
+.title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.title-block > p {
+  color: rgba(29, 29, 29, 0.5);
+
+  font-size: 1.5rem;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 150%; /* 2.25rem */
+}
+
+.title-block > button {
+  border-radius: 1.5rem;
+  background: #920f0f;
+  box-shadow: 0px 2px 5.8px 0px rgba(24, 16, 52, 0.13);
+  display: flex;
+  padding: 0.7rem 1.2rem;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  color: #fffbfa;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 150%; /* 1.5rem */
+  margin-top: 2rem;
+  border: #920f0f solid 0.05rem;
+}
+
+.title-block > button:hover {
+  background: radial-gradient(50% 50% at 50% 50%, #fffbfa 0%, #fbebeb 100%);
+  color: #920f0f;
+  font-size: 1rem;
+  border: #920f0f solid 0.05rem;
+  transition: color 0.3s ease;
+}
+.home-info {
+  display: flex;
+  justify-content: space-between;
+  gap: 8.31rem;
+  margin-top: 12.9375rem;
+  align-items: center;
+}
+form {
+  display: flex;
+  padding: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-direction: column;
+  border-radius: 1.5rem;
+  background: #fff4f4;
+  box-shadow: 0px 2px 10.7px 0px rgba(0, 0, 0, 0.06);
+  margin-top: 4rem;
+}
+
+img {
+  width: 100%;
+
+  display: block;
+}
+
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 5px;
+  display: block;
+}

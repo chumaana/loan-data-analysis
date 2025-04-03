@@ -1,6 +1,6 @@
 def validate_input(data):
     """Validate input data to ensure realistic values."""
-    errors = []
+    errors = {}
 
     # Define valid ranges
     valid_ranges = {
@@ -16,7 +16,7 @@ def validate_input(data):
         <= data["LoanAmount"]
         <= valid_ranges["LoanAmount"][1]
     ):
-        errors.append("Loan amount must be between $0 and $1,000,000.")
+        errors["loan_amount"] = "Loan amount must be between $0 and $1,000,000."
 
     # Check Loan Term
     if not (
@@ -24,7 +24,7 @@ def validate_input(data):
         <= data["Loan_Amount_Term"]
         <= valid_ranges["Loan_Amount_Term"][1]
     ):
-        errors.append("Loan term must be between 12 and 360 months.")
+        errors["loan_amount_term"] = "Loan term must be between 12 and 360 months."
 
     # Check Applicant Income
     if not (
@@ -32,7 +32,7 @@ def validate_input(data):
         <= data["ApplicantIncome"]
         <= valid_ranges["ApplicantIncome"][1]
     ):
-        errors.append("Applicant income must be realistic.")
+        errors["applicant_income"] = "Applicant income must be realistic."
 
     # Check Coapplicant Income
     if not (
@@ -40,6 +40,6 @@ def validate_input(data):
         <= data["CoapplicantIncome"]
         <= valid_ranges["CoapplicantIncome"][1]
     ):
-        errors.append("Coapplicant income must be realistic.")
+        errors["coapplicant_income"] = "Coapplicant income must be realistic."
 
-    return errors
+    return errors  # Now returns a dictionary!
