@@ -1,33 +1,31 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% load static %}
-{% block title %}Graphs - Loan Prediction{% endblock %}
+
+{% block title %}
+Loan Analysis Charts
+{% endblock %}
 
 {% block content %}
-    <h2>Loan Data Visualizations</h2>
-    
- <h3>Applicant Income Distribution</h3>
-    <img src="{% static 'loan_app/applicant_income_distribution.png' %}" alt="Applicant Income Distribution">
 
-    <h3>Feature Correlation Matrix</h3>
-    <img src="{% static 'loan_app/correlation_matrix_prepared.png' %}" alt="Feature Correlation Matrix">
 
-    <h3>Dependents Distribution</h3>
-    <img src="{% static 'loan_app/Dependents_distribution.png' %}" alt="Dependents Distribution">
-
-    <h3>Education Level Distribution</h3>
-    <img src="{% static 'loan_app/Education_distribution.png' %}" alt="Education Level Distribution">
-
-    <h3>Loan Amount by Status</h3>
-    <img src="{% static 'loan_app/loan_amount_by_status.png' %}" alt="Loan Amount by Status">
-
-    <h3>Loan Status Distribution</h3>
-    <img src="{% static 'loan_app/loan_status_distribution_prepared.png' %}" alt="Loan Status Distribution">
-
-    <h3>Married Applicants Distribution</h3>
-    <img src="{% static 'loan_app/Married_distribution.png' %}" alt="Married Applicants Distribution">
-
-    <h3>Property Area Distribution</h3>
-    <img src="{% static 'loan_app/Property_Area_distribution.png' %}" alt="Property Area Distribution">
-
-    <h3>Self-Employed Applicants Distribution</h3>
-    <img src="{% static 'loan_app/Self_Employed_distribution.png' %}" alt="Self-Employed Applicants Distribution">{% endblock %}
+<div class="container">
+    <h2>Loan Analysis Charts</h2>
+    <div class="charts">
+        <div class="chart-container">
+            <img src="data:image/png;base64,{{ loan_status_plot }}" alt="Distribution of Loan Status">
+        </div>
+        <div class="chart-container">
+            <img src="data:image/png;base64,{{ loan_amount_plot }}" alt="Loan Amount Distribution">
+        </div>
+        <div class="chart-container">
+            <img src="data:image/png;base64,{{ income_vs_loan_plot }}" alt="Applicant Income vs Loan Status">
+        </div>
+        <div class="chart-container">
+            <img src="data:image/png;base64,{{ credit_history_plot }}" alt="Loan Status by Credit History">
+        </div>
+        <div class="chart-container">
+            <img src="data:image/png;base64,{{ correlation_matrix_plot }}" alt="Correlation Matrix">
+        </div>
+    </div>
+</div>
+{% endblock %}

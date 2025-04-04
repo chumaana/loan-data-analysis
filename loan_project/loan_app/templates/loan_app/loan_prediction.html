@@ -50,7 +50,7 @@
     </div>
 
     <div class="form-group">
-        <label for="{{ form.loan_amount.id_for_label }}">Loan Amount</label>
+        <label for="{{ form.loan_amount.id_for_label }}">Loan Amount (thousands)</label>
         {{ form.loan_amount }}
         <span class="error-message">{{ form.loan_amount.errors.as_text }}</span>
     </div>
@@ -78,11 +78,13 @@
 
 <!-- Display Prediction Results -->
 {% if prediction %}
-<div class="result-box">
-    <h3>Prediction Result:</h3>
-    <p><strong>{{ prediction }}</strong></p>
+  <h3>Prediction Result:</h3>
+  <p><strong>{{ prediction }}</strong></p>
+  {% endif %}
 
-  
-</div>
-{% endif %}
+  <!-- Approval Probability -->
+  {% if probability is not None %}
+  <p>Approval Probability: 
+      <strong>{{ probability }}%</strong></p>
+  {% endif %}
 {% endblock %}
