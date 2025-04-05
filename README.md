@@ -80,12 +80,6 @@ python manage.py runserver
 1. Navigate to `/graphs` (or click "Visualizations" in the navigation bar).
 2. Explore various plots related to loan data for insights into approval trends and feature correlations.
 
----
-
-## Dependencies
-
-See `requirements.txt` for all required Python packages:
-
 ## Author
 
 Anastasiia Chumak
