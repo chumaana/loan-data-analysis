@@ -71,7 +71,7 @@ python manage.py runserver
 
 ### Loan Prediction Form
 
-1. Navigate to the homepage (`http://127.0.0.1:8000/`).
+1. Navigate to the homepage (`http://127.0.0.1:8000/`) or to (`http://127.0.0.1:8000/predict`).
 2. Fill out the form with applicant details such as gender, income, loan amount, etc.
 3. Submit the form to receive a prediction (`Approved` or `Rejected`) along with an approval probability.
 
