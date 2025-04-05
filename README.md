@@ -20,8 +20,8 @@ This project is a Django-based web application that predicts loan approval based
 
 ### Prerequisites
 
-- Python 3.8 or later
-- pip (Python package manager)
+- Python 3.12 or later
+- pip
 - Virtual environment (optional but recommended)
 
 ### Steps
@@ -32,8 +32,6 @@ This project is a Django-based web application that predicts loan approval based
 git clone https://github.com/chumaana/loan-prediction.git
 cd loan-prediction
 ```
-
-text
 
 2. **Create a virtual environment (optional)**:
 
@@ -52,6 +50,7 @@ pip install -r requirements.txt
 
 - Place your dataset (`loan_data.csv`) in the root directory.
 - Run the training script to preprocess data, train the model, and save it:
+
   ```
   python create_script.py
   ```
