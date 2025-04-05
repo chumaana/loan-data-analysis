@@ -42,4 +42,4 @@ def validate_input(data):
     ):
         errors["coapplicant_income"] = "Coapplicant income must be realistic."
 
-    return errors  # Now returns a dictionary!
+    return errors

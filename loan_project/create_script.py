@@ -12,18 +12,35 @@ import joblib
 
 
 def prepared_data(dataframe: pd.DataFrame) -> tuple[DataFrame, list[str], list[str]]:
+    """
+    Prepares the data for training by handling missing values and categorizing features.
+
+    Args:
+        dataframe (pd.DataFrame): The input DataFrame containing raw data.
+
+    Returns:
+        tuple: A tuple containing the processed DataFrame, a list of categorical feature names,
+               and a list of numerical feature names.
+    """
+    # Fill missing values for categorical columns with their mode
     dataframe["Gender"] = dataframe["Gender"].fillna(dataframe["Gender"].mode()[0])
     dataframe["Married"] = dataframe["Married"].fillna(dataframe["Married"].mode()[0])
     dataframe["Dependents"] = dataframe["Dependents"].fillna(
         dataframe["Dependents"].mode()[0]
     )
+
+    # Replace '3+' in Dependents with 5 and convert to integer
     dataframe["Dependents"] = dataframe["Dependents"].replace("3+", "5").astype(int)
+
+    # Fill missing values
     dataframe["Self_Employed"] = dataframe["Self_Employed"].fillna(
         dataframe["Self_Employed"].mode()[0]
     )
+
     dataframe["Credit_History"] = dataframe["Credit_History"].fillna(
         dataframe["Credit_History"].mode()[0]
     )
+
     dataframe["LoanAmount"] = dataframe["LoanAmount"].fillna(
         dataframe["LoanAmount"].mean()
     )
@@ -45,13 +62,27 @@ def prepared_data(dataframe: pd.DataFrame) -> tuple[DataFrame, list[str], list[s
         "LoanAmount",
         "Loan_Amount_Term",
     ]
+
     return dataframe, categorical_features, numerical_features
 
 
 def train_model(train_data: tuple) -> GridSearchCV:
+    """
+    Trains a Random Forest model using a pipeline with preprocessing and hyperparameter tuning.
+
+    Args:
+        train_data (tuple): A tuple containing the processed DataFrame,
+                            categorical features, and numerical features.
+
+    Returns:
+        GridSearchCV: The best estimator after hyperparameter tuning.
+    """
     dataframe, categorical_features, numerical_features = train_data
-    X = dataframe.drop(columns=["Loan_Status"]).drop(columns=["Loan_ID"])
+
+    X = dataframe.drop(columns=["Loan_Status", "Loan_ID"])
     y = dataframe["Loan_Status"].apply(lambda x: 1 if x == "Y" else 0)
+
+    # Split data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(
         X, y, test_size=0.2, random_state=42
     )
@@ -63,6 +94,7 @@ def train_model(train_data: tuple) -> GridSearchCV:
         ]
     )
 
+    # Create a pipeline combining preprocessing and model training
     pipeline = Pipeline(
         steps=[
             ("preprocessor", preprocessor),
@@ -70,52 +102,45 @@ def train_model(train_data: tuple) -> GridSearchCV:
         ]
     )
 
+    # Define hyperparameter grid for GridSearchCV
     param_grid = {
         "classifier__n_estimators": [100, 200],
         "classifier__max_depth": [10, 20],
         "classifier__min_samples_split": [2, 5],
     }
 
+    # Perform grid search to find the best hyperparameters
     grid_search = GridSearchCV(pipeline, param_grid, cv=5, n_jobs=-1, verbose=2)
+
+    # Train the model using GridSearchCV
     grid_search.fit(X_train, y_train)
+
+    # Extract the best pipeline from GridSearchCV results
     best_pipeline = grid_search.best_estimator_
+
+    # Retrieve feature importances from the trained Random Forest model
     feature_importances = best_pipeline.named_steps["classifier"].feature_importances_
+
+    # Retrieve feature names after preprocessing transformation
     feature_names = best_pipeline.named_steps["preprocessor"].get_feature_names_out()
 
-    # Create DataFrame for visualization
     feature_importance_df = pd.DataFrame(
         {"Feature": feature_names, "Importance": feature_importances}
     )
 
-    # Plot Feature Importance
     plt.figure(figsize=(12, 8))
+
     sns.barplot(
         x="Importance",
         y="Feature",
         data=feature_importance_df.sort_values(by="Importance", ascending=False),
         color="#920f0f",
     )
+
     plt.title("Feature Importance")
+
     plt.xlabel("Importance Score")
     plt.ylabel("Features")
 
-    # Save plot to file
-    output_path = "static/loan_app/feature_importance.png"
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    plt.savefig(output_path)
-    plt.close()
-
-    return grid_search.best_estimator_
-
-
-def main():
-    df = pd.read_csv("loan_data.csv")
-    data = prepared_data(df)
-    model = train_model(data)
-    joblib.dump(model, "ml_model/best_model.pkl")
-    print("Model training and saving completed")
-
-
-if __name__ == "__main__":
-    print("Running creation script...")
-    main()
+    # Save plot to file in a static directory
+    output_path = "static/loan_app.feature_importance"

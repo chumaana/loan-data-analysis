@@ -66,7 +66,6 @@ def predict_loan(request):
                 for field, error in errors.items():
                     form.add_error(field, error)
             else:
-                # Convert to DataFrame
                 X_pred = pd.DataFrame([input_data])
 
                 # Make prediction and get probabilities
@@ -94,12 +93,14 @@ def predict_loan(request):
 
 
 def graphs(request):
+    """
+    Generate and display various visualizations related to loan data.
+    """
     df = pd.read_csv("loan_data.csv")
     dataframe, categorical_features, numerical_features = prepared_data(df)
 
-    # Set custom color palette
-    MAIN_COLOR = "#920f0f"  # Deep burgundy
-    SECONDARY_COLOR = "#f5c6cb"  # Soft pink
+    MAIN_COLOR = "#920f0f"
+    SECONDARY_COLOR = "#f5c6cb"
     sns.set_palette([MAIN_COLOR, SECONDARY_COLOR])
     sns.set_theme(style="whitegrid")
 
