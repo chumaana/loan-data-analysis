@@ -6,7 +6,12 @@
 
 <form method="post"><h2>Loan Prediction Form</h2>
     {% csrf_token %}
-    
+    {% if probability is not None %}
+    <div class="approved">
+  <p>Approval Probability: 
+      <strong>{{ probability }}%</strong></p>
+  </div>
+  {% endif %}
     <div class="form-group">
         <label for="{{ form.gender.id_for_label }}">Gender</label>
         {{ form.gender }}
@@ -76,15 +81,10 @@
     <button type="submit">Predict</button>
 </form>
 
-<!-- Display Prediction Results -->
 {% if prediction %}
   <h3>Prediction Result:</h3>
   <p><strong>{{ prediction }}</strong></p>
   {% endif %}
 
-  <!-- Approval Probability -->
-  {% if probability is not None %}
-  <p>Approval Probability: 
-      <strong>{{ probability }}%</strong></p>
-  {% endif %}
+  
 {% endblock %}
