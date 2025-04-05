@@ -82,31 +82,6 @@ python manage.py runserver
 
 ---
 
-## File Structure
-
-loan-prediction/
-│
-├── loan_app/ # Main Django app with views, forms, templates, etc.
-│ ├── forms.py # Django forms for user input.
-│ ├── validators.py # Input validation logic.
-│ ├── views.py # Core application logic (prediction and graphs).
-│ ├── templates/ # HTML templates for rendering pages.
-│ │ ├── home.html # Homepage template with prediction form.
-│ │ ├── loan_prediction.html # Template for displaying prediction results.
-│ │ └── visualization.html # Template for displaying visualizations.
-│ └── static/ # Static files for CSS, JS, and images.
-│
-├── ml_model/ # Directory for storing trained machine learning models.
-│ └── best_model.pkl # Saved Random Forest model after training.
-│
-├── create_script.py # Script for training and saving the ML model.
-├── loan_data.csv # Dataset used for training and visualization.
-├── requirements.txt # List of dependencies for the project.
-├── README.md # Documentation for the project.
-└── manage.py # Django management script.
-
----
-
 ## Dependencies
 
 See `requirements.txt` for all required Python packages:
