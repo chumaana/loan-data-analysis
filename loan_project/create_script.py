@@ -23,8 +23,8 @@ def prepared_data(dataframe: pd.DataFrame) -> tuple[DataFrame, list[str], list[s
                and a list of numerical feature names.
     """
 
-    print("Data before filling missing values:")
-    print(dataframe.head())
+    print("Data before preparation:")
+    print(dataframe.tail())
     # Fill missing values for categorical columns with their mode
     dataframe["Gender"] = dataframe["Gender"].fillna(dataframe["Gender"].mode()[0])
     dataframe["Married"] = dataframe["Married"].fillna(dataframe["Married"].mode()[0])
@@ -51,8 +51,8 @@ def prepared_data(dataframe: pd.DataFrame) -> tuple[DataFrame, list[str], list[s
         dataframe["Loan_Amount_Term"].mean()
     )
 
-    print("Data after filling missing values:")
-    print(dataframe.head())
+    print("Data after praparation:")
+    print(dataframe.tail())
     categorical_features = [
         "Gender",
         "Married",
