@@ -22,6 +22,9 @@ def prepared_data(dataframe: pd.DataFrame) -> tuple[DataFrame, list[str], list[s
         tuple: A tuple containing the processed DataFrame, a list of categorical feature names,
                and a list of numerical feature names.
     """
+
+    print("Data before filling missing values:")
+    print(dataframe.head())
     # Fill missing values for categorical columns with their mode
     dataframe["Gender"] = dataframe["Gender"].fillna(dataframe["Gender"].mode()[0])
     dataframe["Married"] = dataframe["Married"].fillna(dataframe["Married"].mode()[0])
@@ -48,6 +51,8 @@ def prepared_data(dataframe: pd.DataFrame) -> tuple[DataFrame, list[str], list[s
         dataframe["Loan_Amount_Term"].mean()
     )
 
+    print("Data after filling missing values:")
+    print(dataframe.head())
     categorical_features = [
         "Gender",
         "Married",
@@ -118,6 +123,11 @@ def train_model(train_data: tuple) -> GridSearchCV:
     # Extract the best pipeline from GridSearchCV results
     best_pipeline = grid_search.best_estimator_
 
+    model_save_path = "best_model.pkl"
+    joblib.dump(best_pipeline, model_save_path)
+
+    print(f"Model saved to {model_save_path}")
+
     # Retrieve feature importances from the trained Random Forest model
     feature_importances = best_pipeline.named_steps["classifier"].feature_importances_
 
@@ -144,3 +154,18 @@ def train_model(train_data: tuple) -> GridSearchCV:
 
     # Save plot to file in a static directory
     output_path = "static/loan_app.feature_importance"
+
+
+if __name__ == "__main__":
+    data_path = "loan_data.csv"
+    if not os.path.exists(data_path):
+        raise FileNotFoundError(f"Dataset not found at {data_path}")
+
+    df = pd.read_csv(data_path)
+
+    processed_data, categorical_features, numerical_features = prepared_data(df)
+
+    train_data = (processed_data, categorical_features, numerical_features)
+    trained_model = train_model(train_data)
+
+    print("Model training complete.")
