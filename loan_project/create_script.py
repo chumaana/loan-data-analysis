@@ -123,7 +123,7 @@ def train_model(train_data: tuple) -> GridSearchCV:
     # Extract the best pipeline from GridSearchCV results
     best_pipeline = grid_search.best_estimator_
 
-    model_save_path = "best_model.pkl"
+    model_save_path = "ml_model/best_model.pkl"
     joblib.dump(best_pipeline, model_save_path)
 
     print(f"Model saved to {model_save_path}")
@@ -153,7 +153,10 @@ def train_model(train_data: tuple) -> GridSearchCV:
     plt.ylabel("Features")
 
     # Save plot to file in a static directory
-    output_path = "static/loan_app.feature_importance"
+    output_path = "static/loan_app/feature_importance.png"
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    plt.savefig(output_path)
+    print(f"Feature importance graph saved to {output_path}")
 
 
 if __name__ == "__main__":
