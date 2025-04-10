@@ -59,9 +59,9 @@ def prepared_data(dataframe: pd.DataFrame) -> tuple[DataFrame, list[str], list[s
         "Education",
         "Self_Employed",
         "Property_Area",
-        "Credit_History",
     ]
     numerical_features = [
+        "Credit_History",
         "Dependents",
         "ApplicantIncome",
         "CoapplicantIncome",

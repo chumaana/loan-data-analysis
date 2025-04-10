@@ -7,18 +7,20 @@
 <form method="post"><h2>Loan Prediction Form</h2>
     {% csrf_token %}
     {% if probability is not None %}
-   
+   {% if probability >= 50 %}
         <div class="approved">
             <p>Approval Probability: 
                 <strong>{{ probability }}%</strong>
             </p>
         </div>
-    {% else %}
+        {%else%}
         <div class="rejected">
-            <p>Rejected
-              
+            <p>Rejected.  
+               <strong>{{ probability }}% </strong>of approval
             </p>
         </div>
+    {% endif %}
+
     {% endif %}
     <div class="form-group">
         <label for="{{ form.gender.id_for_label }}">Gender</label>
