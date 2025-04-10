@@ -59,6 +59,7 @@ def prepared_data(dataframe: pd.DataFrame) -> tuple[DataFrame, list[str], list[s
         "Education",
         "Self_Employed",
         "Property_Area",
+        "Credit_History",
     ]
     numerical_features = [
         "Dependents",
@@ -157,6 +158,8 @@ def train_model(train_data: tuple) -> GridSearchCV:
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     plt.savefig(output_path)
     print(f"Feature importance graph saved to {output_path}")
+    test_accuracy = best_pipeline.score(X_test, y_test)
+    print(f"Test Accuracy: {test_accuracy:.2f}")
 
 
 if __name__ == "__main__":
