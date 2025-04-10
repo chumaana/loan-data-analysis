@@ -182,3 +182,9 @@ select {
   border-radius: 1rem;
   background: #8eef8e;
 }
+
+.rejected {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: #943332;
+}
